@@ -20,6 +20,20 @@ pnpm dev                      # http://localhost:3000
 - Studio: http://127.0.0.1:55323
 - Email di test (magic link): http://127.0.0.1:55324
 
+## Database
+
+Migrazioni in `supabase/migrations`, seed locale in `supabase/seed.sql`, test pgTAP in `supabase/tests`.
+
+```bash
+pnpm db:reset   # riapplica migrazioni + seed
+pnpm db:test    # test SQL (soglie, annullamento, chiusura mese, RLS)
+pnpm db:types   # rigenera src/lib/database.types.ts
+```
+
+La logica di gioco vive nel database: trigger sui timbri (mese in ora del gruppo, penitenza ogni 10), vista `monthly_board`, RPC `close_month` / `close_pending_months` (solo `service_role`), RLS su tutte le tabelle.
+
+Utenti demo in locale: `giulia@example.test` (admin), `marta@`, `sofia@`, `chiara@`, `bea@` — gruppo "Le Sboccate", codice `SBOCCA`.
+
 ## Design
 
 `design/` è vincolante: `tokens.css` (unica fonte dei colori, mappata nel tema Tailwind in `src/app/globals.css`), `Stamp.tsx`, `PaperGrain.tsx`, `Avatar.tsx`. Artboard in `design/screens/README.md`.
