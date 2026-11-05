@@ -31,6 +31,15 @@
   --sj-alert-bg: #f4d6cb;
   --sj-alert-ink: #7a1a10;
 
+  /* Schermata "Penitenza sbloccata": uguale nei due temi */
+  --sj-penance-bg: #a3261a;
+  --sj-penance-ink: #fff3e3;
+  --sj-penance-btn-ink: #9a2116;
+  --sj-penance-btn-shadow: #5e130a;
+
+  /* Timbro FATTA sulle penitenze */
+  --sj-done-ink: #2d4a8a;
+
   /* Velo dietro i bottom sheet */
   --sj-scrim: rgb(28 20 16 / 0.5);
 
@@ -95,6 +104,7 @@
     --sj-alert-bg: #4a221a;
     --sj-alert-ink: #ffb7a8;
     --sj-scrim: rgb(0 0 0 / 0.6);
+    --sj-done-ink: #8fb0f0;
 
     --sj-grain: 0.22;
     --sj-stamp-blend: screen;

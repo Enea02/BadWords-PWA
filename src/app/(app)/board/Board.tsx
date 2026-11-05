@@ -11,6 +11,8 @@ import { useOnline } from "@/hooks/useOnline";
 import { cellKey, statusLine, totalsOf, uuid, type Counts, type Girl, type Word } from "@/lib/board";
 import { monthInfo, shortDate } from "@/lib/month";
 import { createClient } from "@/lib/supabase/client";
+import { setPenanceStatus } from "@/lib/penances";
+import { noteStamp } from "@/lib/stampBus";
 import { BoardGrid, type Fresh } from "./BoardGrid";
 import { CellSheet, QuickStampSheet } from "./Sheets";
 
@@ -35,7 +37,8 @@ type Toast =
 /** Il toast "Timbrato!" con Annulla resta 10 secondi. */
 const UNDO_TOAST_MS = 10_000;
 
-export function Board({ me, group, month, girls, words, initialCounts, todo }: Props) {
+export function Board({ me, group, month, girls, words, initialCounts, todo: initialTodo }: Props) {
+  const [todo, setTodo] = useState(initialTodo);
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const online = useOnline();
@@ -156,6 +159,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo }: P
 
       counted.current.add(id);
       inflight.current.set(id, key);
+      noteStamp(girl.id);
       bump(key, +1);
       flash(key);
       navigator.vibrate?.(15);
@@ -285,6 +289,18 @@ export function Board({ me, group, month, girls, words, initialCounts, todo }: P
                   <span className="ml-auto text-xs text-muted">{shortDate(p.createdAt, group.timezone)}</span>
                 </div>
                 <p className="font-display text-[17px] leading-[1.25]">{p.text}</p>
+                {(p.profileId === me.id || me.role === "admin") && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setTodo((t) => t.filter((x) => x.id !== p.id));
+                      if (!(await setPenanceStatus(supabase, p.id, "done"))) setTodo((t) => [p, ...t]);
+                    }}
+                    className="h-10 self-start rounded-[20px] border-[1.5px] border-ink px-3.5 text-[13px] font-extrabold text-ink"
+                  >
+                    Segna come fatta
+                  </button>
+                )}
               </article>
             );
           })}

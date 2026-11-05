@@ -1,6 +1,6 @@
 /** Mese corrente nel fuso del gruppo (Europe/Rome di default). Puro: gira su server e client. */
 
-const MONTHS = [
+export const MONTHS = [
   "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
   "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre",
 ];
@@ -59,4 +59,16 @@ export function stampTime(iso: string, tz: string, now: Date = new Date()) {
   const yest = partsIn(tz, new Date(now.getTime() - 86_400_000));
   const isYesterday = a.y === yest.y && a.m === yest.m && a.d === yest.d;
   return `${sameDay ? "oggi" : isYesterday ? "ieri" : shortDate(iso, tz)} ${time}`;
+}
+
+/** "oggi", "ieri" o "16 nov" nel fuso del gruppo. */
+export function relativeDay(iso: string, tz: string, now: Date = new Date()) {
+  return stampTime(iso, tz, now).replace(/ \d{2}:\d{2}$/, "");
+}
+
+/** "18·11·26" come sul biglietto della penitenza. */
+export function ticketDate(iso: string, tz: string) {
+  const p = new Intl.DateTimeFormat("it-IT", { timeZone: tz, day: "2-digit", month: "2-digit", year: "2-digit" }).formatToParts(new Date(iso));
+  const get = (t: string) => p.find((x) => x.type === t)?.value;
+  return `${get("day")}·${get("month")}·${get("year")}`;
 }

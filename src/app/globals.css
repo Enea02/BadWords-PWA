@@ -27,6 +27,11 @@
   --color-alert-bg: var(--sj-alert-bg);
   --color-alert-ink: var(--sj-alert-ink);
   --color-scrim: var(--sj-scrim);
+  --color-penance-bg: var(--sj-penance-bg);
+  --color-penance-ink: var(--sj-penance-ink);
+  --color-penance-btn-ink: var(--sj-penance-btn-ink);
+  --color-penance-btn-shadow: var(--sj-penance-btn-shadow);
+  --color-done-ink: var(--sj-done-ink);
 
   --color-girl-fucsia: var(--sj-girl-fucsia);
   --color-girl-blu: var(--sj-girl-blu);
@@ -103,6 +108,17 @@
   from { width: 100%; }
   to { width: 0; }
 }
+/* Il timbro grande della penitenza che sbatte sul foglio */
+@keyframes sj-slam {
+  0% { transform: scale(2.3) rotate(-26deg); opacity: 0; }
+  58% { transform: scale(0.94) rotate(-8deg); opacity: 1; }
+  74% { transform: scale(1.03) rotate(-8deg); }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+@keyframes sj-rise {
+  from { transform: translateY(28px) rotate(1.5deg); opacity: 0; }
+  to { transform: translateY(0) rotate(1.5deg); opacity: 1; }
+}
 @keyframes sj-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
@@ -113,8 +129,11 @@
 @utility anim-toast { animation: sj-toast 320ms cubic-bezier(0.2, 0.8, 0.25, 1) both; }
 @utility anim-sheet { animation: sj-sheet 420ms cubic-bezier(0.2, 0.8, 0.25, 1) both; }
 @utility anim-fade { animation: sj-fade 200ms ease-out both; }
+@utility anim-slam { animation: sj-slam 720ms cubic-bezier(0.2, 0.8, 0.25, 1.1) 100ms both; }
+@utility anim-rise { animation: sj-rise 600ms cubic-bezier(0.2, 0.8, 0.25, 1) 550ms both; }
+@utility anim-fade-late { animation: sj-fade 400ms ease 1100ms both; }
 @utility anim-pulse { animation: sj-pulse 1.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim-press, .anim-ring, .anim-toast, .anim-sheet, .anim-pulse { animation-duration: 1ms; animation-iteration-count: 1; }
+  .anim-press, .anim-ring, .anim-toast, .anim-sheet, .anim-pulse, .anim-slam, .anim-rise, .anim-fade-late { animation-duration: 1ms; animation-iteration-count: 1; }
 }

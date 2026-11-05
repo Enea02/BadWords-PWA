@@ -4,6 +4,7 @@ import { Stamp } from "@design/Stamp";
 import type { GirlColor } from "@design/girls";
 import { BottomNav, SidebarNav } from "@/components/AppNav";
 import { GirlAvatar } from "@/components/GirlAvatar";
+import { PenanceWatcher } from "@/components/PenanceWatcher";
 import { getCurrentProfile } from "@/lib/auth";
 import { monthInfo } from "@/lib/month";
 import { createClient } from "@/lib/supabase/server";
@@ -33,7 +34,24 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
 
       <div className="relative z-10 min-w-0 flex-1">{children}</div>
       <BottomNav />
+      <Suspense fallback={null}>
+        <Watcher />
+      </Suspense>
     </div>
+  );
+}
+
+async function Watcher() {
+  const me = await getCurrentProfile();
+  const supabase = await createClient();
+  const { data } = await supabase.from("profiles").select("id, display_name");
+  return (
+    <PenanceWatcher
+      meId={me.id}
+      groupId={me.group.id}
+      timezone={me.group.timezone}
+      members={(data ?? []).map((p) => ({ id: p.id, name: p.display_name }))}
+    />
   );
 }
 

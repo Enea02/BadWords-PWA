@@ -89,6 +89,7 @@ export type Database = {
       }
       penance_assignments: {
         Row: {
+          acknowledged_at: string | null
           created_at: string
           done_at: string | null
           group_id: string
@@ -101,6 +102,7 @@ export type Database = {
           threshold: number | null
         }
         Insert: {
+          acknowledged_at?: string | null
           created_at?: string
           done_at?: string | null
           group_id: string
@@ -113,6 +115,7 @@ export type Database = {
           threshold?: number | null
         }
         Update: {
+          acknowledged_at?: string | null
           created_at?: string
           done_at?: string | null
           group_id?: string
