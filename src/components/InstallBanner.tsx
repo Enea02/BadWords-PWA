@@ -1,9 +1,9 @@
 "use client";
 
 import { useId, useState, useSyncExternalStore } from "react";
-import { Stamp } from "@design/Stamp";
 import { Sheet } from "@/app/(app)/board/Sheets";
 import { dismissInstall, getServerSnapshot, getSnapshot, promptInstall, subscribe } from "@/lib/install";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /** "Aggiungi alla schermata Home": prompt nativo su Android/Chrome, istruzioni su iOS Safari. */
 export function InstallBanner() {
@@ -19,7 +19,7 @@ export function InstallBanner() {
         aria-label="Installa l'app"
         className="mx-4 mt-3 flex items-center gap-3 rounded-card border-[1.5px] border-dashed border-line bg-card py-2 pr-1 pl-3 lg:mx-0 lg:mt-0"
       >
-        <Stamp icon="asterisco" size={34} rot={-12} />
+        <BrandLogo size={40} />
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="text-sm leading-tight font-extrabold">Mettimi nella schermata Home</span>
           <span className="text-xs text-muted">Si apre come un&apos;app, anche senza rete.</span>
@@ -56,7 +56,7 @@ function IosHowTo({ notSafari, onClose }: { notSafari: boolean; onClose: () => v
       : []),
     { icon: <ShareIcon />, text: <>Tocca <strong>Condividi</strong> nella barra di Safari.</> },
     { icon: <AddIcon />, text: <>Scorri e scegli <strong>Aggiungi alla schermata Home</strong>.</> },
-    { icon: <Stamp icon="asterisco" size={26} rot={-12} />, text: <>Tocca <strong>Aggiungi</strong>: il timbro compare tra le app.</> },
+    { icon: <BrandLogo size={30} />, text: <>Tocca <strong>Aggiungi</strong>: il dinosauro compare tra le app.</> },
   ];
 
   return (

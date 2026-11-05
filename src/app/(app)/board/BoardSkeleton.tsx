@@ -1,8 +1,8 @@
 "use client";
 
-import { Stamp } from "@design/Stamp";
 import type { Girl, Word } from "@/lib/board";
 import { BoardGrid } from "./BoardGrid";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const GIRLS: Girl[] = Array.from({ length: 5 }, (_, i) => ({
   id: `s${i}`,
@@ -23,7 +23,7 @@ export function BoardSkeleton() {
     <div className="flex h-dvh flex-col lg:h-auto lg:px-[clamp(16px,3vw,40px)] lg:pt-8" aria-busy="true">
       <header className="flex flex-col gap-1.5 px-5 pt-[54px] lg:p-0">
         <div className="flex items-center gap-2 lg:hidden">
-          <Stamp icon="asterisco" size={28} rot={-12} />
+          <BrandLogo size={32} />
           <span className="font-display text-base text-red">Swear Jar</span>
         </div>
         <div className="mt-1.5 h-[42px] w-48 anim-pulse rounded-md bg-card2 lg:mt-0 lg:h-12" />

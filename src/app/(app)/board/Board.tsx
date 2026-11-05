@@ -16,6 +16,7 @@ import { setPenanceStatus } from "@/lib/penances";
 import { noteStamp } from "@/lib/stampBus";
 import { BoardGrid, type Fresh } from "./BoardGrid";
 import { CellSheet, QuickStampSheet } from "./Sheets";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export type PendingPenance = {
   id: string;
@@ -227,7 +228,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3 lg:hidden">
             <div className="flex min-w-0 items-center gap-2">
-              <Stamp icon="asterisco" size={28} rot={-12} />
+              <BrandLogo size={32} />
               <span className="shrink-0 font-display text-base whitespace-nowrap text-red">Swear Jar</span>
               <span className="truncate text-xs text-muted">· {group.name}</span>
             </div>

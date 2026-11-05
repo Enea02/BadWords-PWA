@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { PaperGrain } from "@design/PaperGrain";
-import { Stamp } from "@design/Stamp";
 import type { GirlColor } from "@design/girls";
 import { BottomNav, SidebarNav } from "@/components/AppNav";
 import { GirlAvatar } from "@/components/GirlAvatar";
@@ -10,6 +9,7 @@ import { fetchClosures } from "@/lib/monthEnd";
 import { getCurrentProfile } from "@/lib/auth";
 import { monthInfo } from "@/lib/month";
 import { createClient } from "@/lib/supabase/server";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /** Area protetta: barra in basso su mobile, barra laterale da 1024 px (board Desktop). */
 export default function AppLayout({ children }: LayoutProps<"/">) {
@@ -19,7 +19,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
 
       <aside className="relative z-10 hidden w-[240px] shrink-0 flex-col gap-7 border-r-[1.5px] border-line bg-card px-5 py-7 lg:flex">
         <div className="flex items-center gap-2.5">
-          <Stamp icon="asterisco" size={36} rot={-12} />
+          <BrandLogo size={44} />
           <div className="flex flex-col">
             <span className="font-display text-xl leading-[1.1] text-red">Swear Jar</span>
             <Suspense fallback={<span className="h-4 w-20 rounded bg-card2" />}>
