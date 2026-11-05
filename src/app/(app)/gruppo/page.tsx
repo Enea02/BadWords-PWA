@@ -3,6 +3,7 @@ import type { GirlColor } from "@design/girls";
 import { GirlAvatar } from "@/components/GirlAvatar";
 import { getCurrentProfile } from "@/lib/auth";
 import { logout } from "../../(auth)/actions";
+import { LogoutButton } from "./LogoutButton";
 import { PenanceModeToggle } from "./PenanceModeToggle";
 
 /** Segnaposto di "Gruppo": il pannello admin completo arriva in Fase 7. */
@@ -49,11 +50,7 @@ async function Who() {
 
       <p className="text-[15px] text-muted">Legenda, mazzo delle penitenze e membri arrivano nel pannello admin.</p>
 
-      <form action={logout}>
-        <button type="submit" className="h-11 rounded-button border-[1.5px] border-ink px-[18px] text-sm font-extrabold text-ink">
-          Esci
-        </button>
-      </form>
+      <LogoutButton action={logout} />
     </>
   );
 }

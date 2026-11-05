@@ -5,6 +5,9 @@ import type { Database } from "@/lib/database.types";
 /** Rotte raggiungibili senza sessione. */
 const PUBLIC_PATHS = ["/login", "/registrati"];
 
+/** Raggiungibili sempre, con o senza sessione (fallback offline del service worker). */
+const OPEN_PATHS = ["/~offline"];
+
 const isPublic = (pathname: string) =>
   PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
@@ -38,6 +41,7 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims?.sub);
   const { pathname } = request.nextUrl;
+  if (OPEN_PATHS.includes(pathname)) return response;
 
   const redirectTo = (path: string) => {
     const url = request.nextUrl.clone();

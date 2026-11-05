@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Alfa_Slab_One, Courier_Prime, DM_Sans } from "next/font/google";
 import { LITERAL } from "@design/tokens";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import "./globals.css";
 
 const alfaSlab = Alfa_Slab_One({
@@ -24,6 +25,9 @@ const courierPrime = Courier_Prime({
 export const metadata: Metadata = {
   title: "Swear Jar",
   description: "La carta fedeltà al contrario: ogni parolaccia è un timbro.",
+  applicationName: "Swear Jar",
+  appleWebApp: { capable: true, title: "Swear Jar", statusBarStyle: "default" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
@@ -42,7 +46,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="it"
       className={`${alfaSlab.variable} ${dmSans.variable} ${courierPrime.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-paper text-ink">{children}</body>
+      <body className="min-h-full flex flex-col bg-paper text-ink">
+        <ServiceWorker>{children}</ServiceWorker>
+      </body>
     </html>
   );
 }

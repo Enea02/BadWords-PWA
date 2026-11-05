@@ -7,4 +7,5 @@ export const LITERAL = {
   paperLight: "#f3ebdd",
   paperDark: "#1c1714",
   redLight: "#b8291a",
+  inkLight: "#2a211c",
 } as const;
