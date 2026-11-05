@@ -67,6 +67,7 @@ export function BoardGrid({
   disabled,
   loading = false,
   desktop,
+  every = 10,
   onTap,
   onDetails,
 }: {
@@ -79,6 +80,7 @@ export function BoardGrid({
   disabled: boolean;
   loading?: boolean;
   desktop: boolean;
+  every?: number;
   onTap: (g: Girl, w: Word) => void;
   onDetails: (g: Girl, w: Word) => void;
 }) {
@@ -160,7 +162,7 @@ export function BoardGrid({
         </div>
         {girls.map((g, gi) => {
           const n = totals[gi] ?? 0;
-          const p = progress(n);
+          const p = progress(n, every);
           const ink = girlInk(g.color);
           return (
             <div
@@ -182,7 +184,7 @@ export function BoardGrid({
                     className={`overflow-hidden rounded-full bg-card2 ${S.bar}`}
                     role="progressbar"
                     aria-label={`${g.name}: ${n} timbri, prossima penitenza a ${p.next}`}
-                    aria-valuemin={p.next - 10}
+                    aria-valuemin={p.next - every}
                     aria-valuemax={p.next}
                     aria-valuenow={n}
                   >

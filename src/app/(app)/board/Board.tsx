@@ -28,7 +28,7 @@ export type PendingPenance = {
 
 type Props = {
   me: { id: string; role: "admin" | "member" };
-  group: { id: string; name: string; timezone: string };
+  group: { id: string; name: string; timezone: string; penanceEvery: number };
   month: string;
   girls: Girl[];
   words: Word[];
@@ -64,7 +64,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
   const inflight = useRef(new Map<string, string>());
 
   const meGirl = girls.find((g) => g.id === me.id)!;
-  const totals = useMemo(() => totalsOf(girls, words, counts), [girls, words, counts]);
+  const totals = useMemo(() => totalsOf(girls, counts), [girls, counts]);
   const countsRef = useRef(counts);
   useEffect(() => {
     countsRef.current = counts;
@@ -76,7 +76,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
   }, [girls, totals]);
 
   const info = monthInfo(group.timezone);
-  const status = statusLine(girls, totals, me.id);
+  const status = statusLine(girls, totals, me.id, group.penanceEvery);
   const myTotal = totals[girls.findIndex((g) => g.id === me.id)] ?? 0;
 
   const bump = useCallback((key: string, delta: number) => {
@@ -163,7 +163,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
       const id = uuid();
       const key = cellKey(girl.id, word.id);
       const gi = girls.findIndex((g) => g.id === girl.id);
-      const total = totalsOf(girls, words, countsRef.current)[gi] + 1;
+      const total = totalsOf(girls, countsRef.current)[gi] + 1;
 
       counted.current.add(id);
       inflight.current.set(id, key);
@@ -185,7 +185,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
       }
       // La penitenza (10, 20, 30…) la crea il database; la schermata arriva in Fase 4.
     },
-    [girls, words, supabase, group.id, me.id, bump, flash],
+    [girls, supabase, group.id, me.id, bump, flash],
   );
 
   const undo = useCallback(
@@ -268,6 +268,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
               fresh={fresh}
               disabled={disabled}
               desktop={desktop}
+              every={group.penanceEvery}
               onTap={stamp}
               onDetails={(girl, word) => setSheet({ type: "cell", girl, word })}
             />
@@ -346,6 +347,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
           me={meGirl}
           words={words}
           total={myTotal}
+          every={group.penanceEvery}
           onClose={() => setSheet(null)}
           onPick={(w) => {
             setSheet(null);

@@ -20,12 +20,14 @@ type Member = { id: string; name: string };
 export function PenanceWatcher({
   meId,
   isAdmin,
+  every,
   groupId,
   timezone,
   members,
 }: {
   meId: string;
   isAdmin: boolean;
+  every: number;
   groupId: string;
   timezone: string;
   members: Member[];
@@ -118,6 +120,7 @@ export function PenanceWatcher({
           name={nameOf(current.profileId)}
           mine={current.profileId === meId}
           isAdmin={isAdmin}
+          every={every}
           timezone={timezone}
           onDecide={async (text) => {
             const ok = await decidePenance(supabase, current.id, text);

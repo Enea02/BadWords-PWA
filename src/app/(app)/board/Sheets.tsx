@@ -56,17 +56,19 @@ export function QuickStampSheet({
   me,
   words,
   total,
+  every,
   onPick,
   onClose,
 }: {
   me: Girl;
   words: Word[];
   total: number;
+  every: number;
   onPick: (w: Word) => void;
   onClose: () => void;
 }) {
   const titleId = useId();
-  const p = progress(total);
+  const p = progress(total, every);
 
   return (
     <Sheet onClose={onClose} labelledBy={titleId}>

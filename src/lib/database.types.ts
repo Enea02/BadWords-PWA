@@ -40,6 +40,7 @@ export type Database = {
           id: string
           invite_code: string
           name: string
+          penance_every: number
           penance_mode: Database["public"]["Enums"]["penance_mode"]
           timezone: string
         }
@@ -48,6 +49,7 @@ export type Database = {
           id?: string
           invite_code?: string
           name: string
+          penance_every?: number
           penance_mode?: Database["public"]["Enums"]["penance_mode"]
           timezone?: string
         }
@@ -56,6 +58,7 @@ export type Database = {
           id?: string
           invite_code?: string
           name?: string
+          penance_every?: number
           penance_mode?: Database["public"]["Enums"]["penance_mode"]
           timezone?: string
         }
@@ -482,6 +485,7 @@ export type Database = {
       }
       my_group_id: { Args: never; Returns: string }
       preview_invite: { Args: { p_code: string }; Returns: Json }
+      regenerate_invite_code: { Args: never; Returns: string }
       seed_group_defaults: { Args: { p_group: string }; Returns: undefined }
     }
     Enums: {

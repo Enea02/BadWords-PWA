@@ -54,6 +54,7 @@ async function Watcher() {
     <PenanceWatcher
       meId={me.id}
       isAdmin={me.role === "admin"}
+      every={me.group.penance_every}
       groupId={me.group.id}
       timezone={me.group.timezone}
       members={(data ?? []).map((p) => ({ id: p.id, name: p.display_name }))}

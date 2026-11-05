@@ -58,7 +58,7 @@ async function BoardData() {
   return (
     <Board
       me={{ id: me.id, role: me.role }}
-      group={{ id: me.group.id, name: me.group.name, timezone: me.group.timezone }}
+      group={{ id: me.group.id, name: me.group.name, timezone: me.group.timezone, penanceEvery: me.group.penance_every }}
       month={m.month}
       girls={girls}
       words={words}

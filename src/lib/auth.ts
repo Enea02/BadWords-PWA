@@ -15,7 +15,7 @@ export const getCurrentProfile = cache(async () => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, display_name, color, avatar_url, role, created_at, last_seen_closure, group:groups (id, name, invite_code, timezone, penance_mode)")
+    .select("id, display_name, color, avatar_url, role, created_at, last_seen_closure, group:groups (id, name, invite_code, timezone, penance_mode, penance_every)")
     .eq("id", userId)
     .maybeSingle();
 

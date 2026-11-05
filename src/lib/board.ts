@@ -19,15 +19,24 @@ export const cellKey = (profileId: string, wordId: string) => `${profileId}:${wo
 /** Rotazione deterministica dei timbri in una cella (stessa formula del design). */
 export const stampRot = (wi: number, gi: number, k: number) => ((wi * 7 + gi * 13 + k * 29 + 5) % 27) - 13;
 
-export function totalsOf(girls: Girl[], words: Word[], counts: Counts) {
-  return girls.map((g) => words.reduce((sum, w) => sum + (counts[cellKey(g.id, w.id)] ?? 0), 0));
+/**
+ * Totale del mese per ragazza: somma di TUTTE le sue celle, anche delle voci disattivate
+ * (i timbri già dati restano validi), come fa il database per le soglie.
+ */
+export function totalsOf(girls: Girl[], counts: Counts) {
+  const byGirl = new Map<string, number>();
+  for (const [key, n] of Object.entries(counts)) {
+    const id = key.slice(0, key.indexOf(":"));
+    byGirl.set(id, (byGirl.get(id) ?? 0) + n);
+  }
+  return girls.map((g) => byGirl.get(g.id) ?? 0);
 }
 
-/** Prossima soglia: 10, 20, 30… Se il totale è esattamente su una soglia (>0), la penitenza è appena scattata. */
-export function progress(n: number) {
-  const unlocked = n > 0 && n % 10 === 0;
-  const next = unlocked ? n : Math.floor(n / 10) * 10 + 10;
-  const pct = unlocked ? 100 : (n - (next - 10)) * 10;
+/** Prossima soglia (multipli di `every`, default 10). Se il totale è esattamente su una soglia (>0), la penitenza è appena scattata. */
+export function progress(n: number, every = 10) {
+  const unlocked = n > 0 && n % every === 0;
+  const next = unlocked ? n : Math.floor(n / every) * every + every;
+  const pct = unlocked ? 100 : ((n - (next - every)) / every) * 100;
   const hot = !unlocked && next - n === 1;
   return { next, pct, hot, unlocked };
 }
@@ -38,7 +47,7 @@ const join = (names: string[]) =>
 /** Riga di stato sotto il mese, come nella board: chi guida e chi è a un passo. */
 const timbri = (n: number) => `${n} ${n === 1 ? "timbro" : "timbri"}`;
 
-export function statusLine(girls: Girl[], totals: number[], meId: string) {
+export function statusLine(girls: Girl[], totals: number[], meId: string, every = 10) {
   const max = Math.max(0, ...totals);
   if (max === 0) return "Cartoncino nuovo, bocca pulita. Per ora.";
 
@@ -51,7 +60,7 @@ export function statusLine(girls: Girl[], totals: number[], meId: string) {
         : `${girls[leaders[0]].name} guida con ${timbri(max)}.`
       : `${join(leaders.map(name))} in testa con ${timbri(max)}.`;
 
-  const near = totals.flatMap((t, i) => (t % 10 === 9 ? [i] : []));
+  const near = totals.flatMap((t, i) => (t > 0 && t % every === every - 1 ? [i] : []));
   const others = near.filter((i) => girls[i].id !== meId).map((i) => girls[i].name);
   const meNear = near.some((i) => girls[i].id === meId);
   // "Marta guida con 9 timbri ed è a un timbro dalla penitenza."

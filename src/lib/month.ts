@@ -72,3 +72,8 @@ export function ticketDate(iso: string, tz: string) {
   const get = (t: string) => p.find((x) => x.type === t)?.value;
   return `${get("day")}·${get("month")}·${get("year")}`;
 }
+
+/** true se la data è negli ultimi `days` giorni. */
+export function isRecent(iso: string, days: number, now: Date = new Date()) {
+  return now.getTime() - new Date(iso).getTime() < days * 86_400_000;
+}

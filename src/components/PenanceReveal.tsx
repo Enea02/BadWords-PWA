@@ -15,6 +15,7 @@ export function PenanceReveal({
   name,
   mine,
   isAdmin,
+  every,
   timezone,
   onAccept,
   onDecide,
@@ -23,14 +24,16 @@ export function PenanceReveal({
   name: string;
   mine: boolean;
   isAdmin: boolean;
+  every: number;
   timezone: string;
   onAccept: () => void;
   onDecide: (text: string) => Promise<boolean>;
 }) {
   const id = useId().replace(/:/g, "");
   const button = useRef<HTMLButtonElement>(null);
-  const threshold = penance.threshold ?? 10;
-  const n = threshold / 10;
+  const threshold = penance.threshold ?? every;
+  // N° della penitenza piccola nel mese (la soglia potrebbe essere cambiata nel frattempo).
+  const n = Math.max(1, Math.round(threshold / every));
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -122,7 +125,7 @@ export function PenanceReveal({
           {mine ? "Accetto il mio destino" : "Torna al tabellone"}
         </button>
         <p className="text-center text-[13px] leading-[1.4] opacity-90">
-          {mine ? "Le amiche ricevono la notizia adesso." : `${name} riceve la notizia adesso.`} Prossima tappa: {threshold + 10} timbri.
+          {mine ? "Le amiche ricevono la notizia adesso." : `${name} riceve la notizia adesso.`} Prossima tappa: {threshold + every} timbri.
         </p>
       </div>
     </div>,
