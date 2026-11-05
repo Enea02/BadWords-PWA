@@ -27,6 +27,13 @@
   --sj-toast-accent: #ff9c86;
   --sj-toast-stamp: #7fa6ea;
 
+  /* Avviso tenue (banner "Sei a 9 timbri", voce attiva del menu desktop) */
+  --sj-alert-bg: #f4d6cb;
+  --sj-alert-ink: #7a1a10;
+
+  /* Velo dietro i bottom sheet */
+  --sj-scrim: rgb(28 20 16 / 0.5);
+
   /* Testo sugli avatar (uguale nei due temi) */
   --sj-on-avatar: #fff8ee;
 
@@ -83,6 +90,11 @@
     --sj-toast-ink: #1c1714;
     --sj-toast-accent: #b8291a;
     --sj-toast-stamp: #2f5da8;
+
+    /* Varianti scure ricavate (non presenti nel design). */
+    --sj-alert-bg: #4a221a;
+    --sj-alert-ink: #ffb7a8;
+    --sj-scrim: rgb(0 0 0 / 0.6);
 
     --sj-grain: 0.22;
     --sj-stamp-blend: screen;

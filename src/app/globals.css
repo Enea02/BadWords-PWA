@@ -24,6 +24,9 @@
   --color-toast-accent: var(--sj-toast-accent);
   --color-toast-stamp: var(--sj-toast-stamp);
   --color-on-avatar: var(--sj-on-avatar);
+  --color-alert-bg: var(--sj-alert-bg);
+  --color-alert-ink: var(--sj-alert-ink);
+  --color-scrim: var(--sj-scrim);
 
   --color-girl-fucsia: var(--sj-girl-fucsia);
   --color-girl-blu: var(--sj-girl-blu);
@@ -67,4 +70,51 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* ─────────────── Animazioni del design ─────────────── */
+
+/* Il timbro che si imprime */
+@keyframes sj-press {
+  0% { transform: scale(2.6) rotate(-20deg); opacity: 0; }
+  40% { transform: scale(0.9) rotate(0); opacity: 1; }
+  60% { transform: scale(1.06); }
+  80%, 100% { transform: scale(1); opacity: 1; }
+}
+/* L'onda d'urto attorno alla cella */
+@keyframes sj-ring {
+  0% { transform: scale(0.4); opacity: 0; }
+  15% { opacity: 0.7; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes sj-toast {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes sj-sheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes sj-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sj-countdown {
+  from { width: 100%; }
+  to { width: 0; }
+}
+@keyframes sj-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@utility anim-press { animation: sj-press 700ms cubic-bezier(0.2, 0.8, 0.25, 1.15) both; }
+@utility anim-ring { animation: sj-ring 900ms ease-out both; }
+@utility anim-toast { animation: sj-toast 320ms cubic-bezier(0.2, 0.8, 0.25, 1) both; }
+@utility anim-sheet { animation: sj-sheet 420ms cubic-bezier(0.2, 0.8, 0.25, 1) both; }
+@utility anim-fade { animation: sj-fade 200ms ease-out both; }
+@utility anim-pulse { animation: sj-pulse 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-press, .anim-ring, .anim-toast, .anim-sheet, .anim-pulse { animation-duration: 1ms; animation-iteration-count: 1; }
 }

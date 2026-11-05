@@ -238,7 +238,7 @@ export type Database = {
           created_by?: string | null
           group_id: string
           id?: string
-          month: string
+          month?: string
           profile_id: string
           voided_at?: string | null
           voided_by?: string | null
