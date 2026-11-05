@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LogoStamp } from "@/components/LogoStamp";
+import Image from "next/image";
 import { PaperScreen, TextLink } from "@/components/ui";
 import { LoginForm } from "./LoginForm";
 
@@ -8,8 +8,15 @@ export const metadata: Metadata = { title: "Entra · Swear Jar" };
 /** Board "1 · Login", con nome utente e password al posto del magic link. */
 export default function LoginPage() {
   return (
-    <PaperScreen className="gap-[18px] pt-24">
-      <LogoStamp />
+    <PaperScreen className="gap-[18px] pt-20">
+      <Image
+        src="/logo.png"
+        alt="Bad Words: il dinosauro che si tappa la bocca"
+        width={220}
+        height={220}
+        priority
+        className="size-[200px] self-center"
+      />
 
       <div className="flex flex-col items-center gap-2.5 text-center">
         <h1 className="font-display text-[44px] leading-none">Swear Jar</h1>

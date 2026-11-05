@@ -11,7 +11,7 @@ const revision =
 export const { dynamic, dynamicParams, revalidate, generateStaticParams, GET } = createSerwistRoute({
   additionalPrecacheEntries: [{ url: "/~offline", revision }],
   swSrc: "src/app/sw.ts",
-  // Le icone grandi servono solo all'installazione: niente precache.
-  globIgnores: ["**/icons/**"],
+  // Icone (solo per l'installazione) e logo originale (la login usa la versione ottimizzata): niente precache.
+  globIgnores: ["**/icons/**", "**/logo.png"],
   useNativeEsbuild: true,
 });

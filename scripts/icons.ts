@@ -1,51 +1,79 @@
 /**
- * Genera le icone della PWA dal timbro asterisco (stessi tracciati e filtro di design/Stamp.tsx)
- * su un quadrato color carta (senza grana: a queste dimensioni non si vede e gonfia i PNG). Uso: `pnpm icons` (Node 24, TypeScript nativo).
+ * Logo e icone della PWA dal logo "Bad Words" (design/brand/dinosauro-bad-words.png).
+ * Uso: `pnpm icons` (Node 24, TypeScript nativo).
+ *
+ * 1. Toglie lo sfondo bianco ESTERNO (flood fill dai bordi): il bianco dentro il cartello resta.
+ * 2. public/logo.png: logo trasparente 640 px per la pagina di login.
+ * 3. Icone su quadrato color carta: 192, 512, maskable 512 (safe zone), apple-touch-icon, favicon.
  */
-import { rmSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { Resvg } from "@resvg/resvg-js";
+import { PNG } from "pngjs";
 import { LITERAL } from "../design/tokens.ts";
 
-/** `scale` = lato del timbro rispetto all'icona. Maskable: ≤ 0.62 per stare nella safe zone (cerchio 80%). */
-function iconSvg(size: number, scale: number, rot = -12) {
-  const stamp = size * scale;
-  const off = (size - stamp) / 2;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <filter id="ink" x="-8%" y="-8%" width="116%" height="116%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="4" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G" result="d"/>
-    <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="s"/>
-    <feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.05" result="m"/>
-    <feComposite in="d" in2="m" operator="in"/>
-  </filter>
-  <rect width="100%" height="100%" fill="${LITERAL.paperLight}"/>
-  <g transform="translate(${off} ${off}) scale(${stamp / 48}) rotate(${rot} 24 24)" opacity="0.94"
-     fill="none" stroke="${LITERAL.redLight}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <g filter="url(#ink)">
-      <circle cx="24" cy="24" r="21.5" stroke-width="2.4"/>
-      <circle cx="24" cy="24" r="18" stroke-width="1" stroke-dasharray="1.4 2.2"/>
-      <path d="M24 14 V34" stroke-width="3.2"/>
-      <path d="M15.3 19 L32.7 29" stroke-width="3.2"/>
-      <path d="M15.3 29 L32.7 19" stroke-width="3.2"/>
-    </g>
-  </g>
-</svg>`;
-}
+const SRC = "design/brand/dinosauro-bad-words.png";
 
-function png(svg: string, size: number) {
+// ─────────────── 1. Sfondo esterno trasparente ───────────────
+const img = PNG.sync.read(readFileSync(SRC));
+const { width: W, height: H, data } = img;
+const NEAR_WHITE = 232; // soglia per "sfondo"
+const isBg = (i: number) => data[i] >= NEAR_WHITE && data[i + 1] >= NEAR_WHITE && data[i + 2] >= NEAR_WHITE;
+
+const seen = new Uint8Array(W * H);
+const stack: number[] = [];
+for (let x = 0; x < W; x++) stack.push(x, (H - 1) * W + x);
+for (let y = 0; y < H; y++) stack.push(y * W, y * W + W - 1);
+while (stack.length) {
+  const p = stack.pop()!;
+  if (seen[p]) continue;
+  seen[p] = 1;
+  if (!isBg(p * 4)) continue;
+  data[p * 4 + 3] = 0;
+  const x = p % W;
+  if (x > 0) stack.push(p - 1);
+  if (x < W - 1) stack.push(p + 1);
+  if (p >= W) stack.push(p - W);
+  if (p < W * (H - 1)) stack.push(p + W);
+}
+// Bordo morbido: i pixel chiari a contatto con lo sfondo tolto diventano semitrasparenti (niente alone bianco).
+const alpha = new Uint8Array(W * H);
+for (let p = 0; p < W * H; p++) alpha[p] = data[p * 4 + 3];
+for (let y = 1; y < H - 1; y++) {
+  for (let x = 1; x < W - 1; x++) {
+    const p = y * W + x;
+    if (alpha[p] === 0) continue;
+    const touches = alpha[p - 1] === 0 || alpha[p + 1] === 0 || alpha[p - W] === 0 || alpha[p + W] === 0;
+    if (!touches) continue;
+    const lum = (data[p * 4] + data[p * 4 + 1] + data[p * 4 + 2]) / 3;
+    data[p * 4 + 3] = Math.round(255 * Math.min(1, Math.max(0, (255 - lum) / (255 - 180))));
+  }
+}
+const transparent = PNG.sync.write(img);
+const dataUri = `data:image/png;base64,${transparent.toString("base64")}`;
+
+// ─────────────── 2 e 3. Rendering ───────────────
+/** `scale` = lato del logo rispetto al quadrato; `bg` = colore di sfondo o null (trasparente). */
+function render(size: number, scale: number, bg: string | null) {
+  const side = 1024;
+  const logo = side * scale;
+  const off = (side - logo) / 2;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${side}" height="${side}" viewBox="0 0 ${side} ${side}">
+  ${bg ? `<rect width="100%" height="100%" fill="${bg}"/>` : ""}
+  <image x="${off}" y="${off}" width="${logo}" height="${logo}" xlink:href="${dataUri}"/>
+</svg>`;
   return new Resvg(svg, { fitTo: { mode: "width", value: size } }).render().asPng();
 }
 
-const out: [string, number, number][] = [
-  ["public/icons/icon-192.png", 192, 0.84],
-  ["public/icons/icon-512.png", 512, 0.84],
-  ["public/icons/maskable-512.png", 512, 0.6],
-  ["src/app/apple-icon.png", 180, 0.78], // iOS arrotonda gli angoli da sé
-  ["src/app/icon.png", 64, 0.92], // favicon
+const out: [string, number, number, string | null][] = [
+  ["public/logo.png", 640, 1, null],
+  ["public/icons/icon-192.png", 192, 0.94, LITERAL.paperLight],
+  ["public/icons/icon-512.png", 512, 0.94, LITERAL.paperLight],
+  ["public/icons/maskable-512.png", 512, 0.72, LITERAL.paperLight], // safe zone: cerchio dell'80%
+  ["src/app/apple-icon.png", 180, 0.9, LITERAL.paperLight], // iOS arrotonda gli angoli da sé
+  ["src/app/icon.png", 64, 1, null], // favicon trasparente
 ];
 
-for (const [file, size, scale] of out) {
-  writeFileSync(file, png(iconSvg(512, scale), size));
+for (const [file, size, scale, bg] of out) {
+  writeFileSync(file, render(size, scale, bg));
   console.log("✓", file);
 }
-rmSync("src/app/favicon.ico", { force: true });
