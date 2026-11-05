@@ -56,7 +56,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Tutto tranne asset statici, immagini e file con estensione (icone, manifest, sw).
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|json|js|webmanifest)$).*)",
+    // Tutto tranne asset statici, immagini, file con estensione (icone, manifest, sw)
+    // e le rotte cron, che si autenticano col proprio secret.
+    "/((?!_next/static|_next/image|api/cron|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|json|js|webmanifest)$).*)",
   ],
 };

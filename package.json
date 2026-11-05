@@ -12,7 +12,9 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local > src/lib/database.types.ts",
-    "db:test": "supabase test db"
+    "db:test": "supabase test db",
+    "dev:mesi-finti": "docker exec -i supabase_db_swear-jar psql -U postgres -d postgres -q -v ON_ERROR_STOP=1 < supabase/dev/mesi-finti.sql",
+    "dev:chiudi-mesi": "sh -c 'set -a; . ./.env.local; curl -s -H \"Authorization: Bearer $CRON_SECRET\" ${URL:-http://localhost:3000}/api/cron/close-month; echo'"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

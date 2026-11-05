@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { monthInfo } from "@/lib/month";
 import { acknowledgePenance, decidePenance, fetchPenance, type PenanceItem } from "@/lib/penances";
 import { stampedRecently } from "@/lib/stampBus";
 import { createClient } from "@/lib/supabase/client";
@@ -51,6 +52,7 @@ export function PenanceWatcher({
       .select("id")
       .eq("profile_id", meId)
       .eq("kind", "small")
+      .eq("month", monthInfo(timezone).month) // quelle dei mesi chiusi restano nella lista Penitenze
       .is("acknowledged_at", null)
       .order("created_at")
       .then(async ({ data }) => {
@@ -59,7 +61,7 @@ export function PenanceWatcher({
           if (p) enqueue(p);
         }
       });
-  }, [supabase, meId, enqueue]);
+  }, [supabase, meId, timezone, enqueue]);
 
   useEffect(() => {
     const channel = supabase

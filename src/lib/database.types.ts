@@ -216,6 +216,7 @@ export type Database = {
           display_name: string
           group_id: string
           id: string
+          last_seen_closure: string | null
           role: Database["public"]["Enums"]["profile_role"]
         }
         Insert: {
@@ -225,6 +226,7 @@ export type Database = {
           display_name: string
           group_id: string
           id: string
+          last_seen_closure?: string | null
           role?: Database["public"]["Enums"]["profile_role"]
         }
         Update: {
@@ -234,6 +236,7 @@ export type Database = {
           display_name?: string
           group_id?: string
           id?: string
+          last_seen_closure?: string | null
           role?: Database["public"]["Enums"]["profile_role"]
         }
         Relationships: [
@@ -430,6 +433,7 @@ export type Database = {
           display_name: string
           group_id: string
           id: string
+          last_seen_closure: string | null
           role: Database["public"]["Enums"]["profile_role"]
         }
         SetofOptions: {
@@ -456,6 +460,7 @@ export type Database = {
           display_name: string
           group_id: string
           id: string
+          last_seen_closure: string | null
           role: Database["public"]["Enums"]["profile_role"]
         }
         SetofOptions: {

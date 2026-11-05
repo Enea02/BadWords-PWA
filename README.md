@@ -40,6 +40,21 @@ Nome utente + password, niente email. Il nome utente diventa un indirizzo intern
 
 Password dimenticata: per ora la reimposta l'admin del progetto da Supabase (Authentication → Users); dal pannello Gruppo in Fase 7.
 
+## Fine mese
+
+Ogni giorno alle 00:05 UTC Vercel Cron chiama `/api/cron/close-month` (vedi `vercel.json`) con `Authorization: Bearer $CRON_SECRET`. La rotta esegue `close_pending_months()` con la service role: chiude tutti i mesi passati non ancora chiusi, assegna la penitenza grossa a chi ha il totale più alto (pari merito: a tutte) e salva lo snapshot per lo Storico. È idempotente: se un giorno salta, recupera il giro dopo.
+
+Provarla in locale senza aspettare un mese:
+
+```bash
+pnpm db:reset
+pnpm dev:mesi-finti   # il gruppo "esiste" da 3 mesi: ottobre (vince Giulia), settembre (pari merito), agosto (vuoto)
+pnpm dev              # in un altro terminale
+pnpm dev:chiudi-mesi  # curl sulla rotta cron col CRON_SECRET di .env.local
+```
+
+Poi entra come `giulia`: compare "Bocca sporca del mese"; lo Storico mostra i tre mesi.
+
 ## Design
 
 `design/` è vincolante: `tokens.css` (unica fonte dei colori, mappata nel tema Tailwind in `src/app/globals.css`), `Stamp.tsx`, `PaperGrain.tsx`, `Avatar.tsx`. Artboard in `design/screens/README.md`.

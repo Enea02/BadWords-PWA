@@ -4,7 +4,9 @@ import { Stamp } from "@design/Stamp";
 import type { GirlColor } from "@design/girls";
 import { BottomNav, SidebarNav } from "@/components/AppNav";
 import { GirlAvatar } from "@/components/GirlAvatar";
+import { MonthEndGate } from "@/components/MonthEndHost";
 import { PenanceWatcher } from "@/components/PenanceWatcher";
+import { fetchClosures } from "@/lib/monthEnd";
 import { getCurrentProfile } from "@/lib/auth";
 import { monthInfo } from "@/lib/month";
 import { createClient } from "@/lib/supabase/server";
@@ -37,6 +39,9 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
       <Suspense fallback={null}>
         <Watcher />
       </Suspense>
+      <Suspense fallback={null}>
+        <ClosureGate />
+      </Suspense>
     </div>
   );
 }
@@ -54,6 +59,32 @@ async function Watcher() {
       members={(data ?? []).map((p) => ({ id: p.id, name: p.display_name }))}
     />
   );
+}
+
+/** "Bocca sporca del mese" al primo accesso dopo la chiusura (solo per chi c'era in quel mese). */
+async function ClosureGate() {
+  const me = await getCurrentProfile();
+  const supabase = await createClient();
+  const { data: latest } = await supabase
+    .from("month_closures")
+    .select("month")
+    .order("month", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!latest) return null;
+
+  const joined = monthInfo(me.group.timezone, new Date(me.created_at)).month;
+  const unseen = !me.last_seen_closure || latest.month > me.last_seen_closure;
+  if (!unseen || latest.month < joined) return null;
+
+  const [[closure], { data: girls }] = await Promise.all([
+    fetchClosures(supabase, latest.month),
+    supabase.from("profiles").select("id, color, avatar_url"),
+  ]);
+  if (!closure) return null;
+  const avatars = Object.fromEntries((girls ?? []).map((g) => [g.id, { avatarUrl: g.avatar_url, color: g.color as GirlColor }]));
+
+  return <MonthEndGate initial={closure} meId={me.id} isAdmin={me.role === "admin"} avatars={avatars} />;
 }
 
 async function GroupName() {

@@ -37,6 +37,15 @@
   --sj-penance-btn-ink: #9a2116;
   --sj-penance-btn-shadow: #5e130a;
 
+  /* Schermata "Bocca sporca del mese": notte, uguale nei due temi */
+  --sj-night: #1f1814;
+  --sj-night-card: #2f2822;
+  --sj-night-ink: #f3ebdd;
+  --sj-night-muted: #b9ab99;
+  --sj-night-gold: #e7b14a;
+  --sj-night-red: #ef5b45;
+  --sj-night-red-shadow: #8e2a1c;
+
   /* Timbro FATTA sulle penitenze */
   --sj-done-ink: #2d4a8a;
 

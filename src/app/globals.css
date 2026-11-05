@@ -32,6 +32,12 @@
   --color-penance-btn-ink: var(--sj-penance-btn-ink);
   --color-penance-btn-shadow: var(--sj-penance-btn-shadow);
   --color-done-ink: var(--sj-done-ink);
+  --color-night: var(--sj-night);
+  --color-night-card: var(--sj-night-card);
+  --color-night-ink: var(--sj-night-ink);
+  --color-night-muted: var(--sj-night-muted);
+  --color-night-gold: var(--sj-night-gold);
+  --color-night-red: var(--sj-night-red);
 
   --color-girl-fucsia: var(--sj-girl-fucsia);
   --color-girl-blu: var(--sj-girl-blu);
@@ -119,6 +125,12 @@
   from { transform: translateY(28px) rotate(1.5deg); opacity: 0; }
   to { transform: translateY(0) rotate(1.5deg); opacity: 1; }
 }
+/* Il timbro della vincitrice che gira e si posa */
+@keyframes sj-spin {
+  0% { transform: rotate(-14deg) scale(1.6); opacity: 0; }
+  60% { transform: rotate(-6deg) scale(0.96); opacity: 1; }
+  100% { transform: rotate(-6deg) scale(1); opacity: 1; }
+}
 @keyframes sj-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
@@ -132,8 +144,9 @@
 @utility anim-slam { animation: sj-slam 720ms cubic-bezier(0.2, 0.8, 0.25, 1.1) 100ms both; }
 @utility anim-rise { animation: sj-rise 600ms cubic-bezier(0.2, 0.8, 0.25, 1) 550ms both; }
 @utility anim-fade-late { animation: sj-fade 400ms ease 1100ms both; }
+@utility anim-spin { animation: sj-spin 700ms cubic-bezier(0.2, 0.8, 0.25, 1.1) both; }
 @utility anim-pulse { animation: sj-pulse 1.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim-press, .anim-ring, .anim-toast, .anim-sheet, .anim-pulse, .anim-slam, .anim-rise, .anim-fade-late { animation-duration: 1ms; animation-iteration-count: 1; }
+  .anim-press, .anim-ring, .anim-toast, .anim-sheet, .anim-pulse, .anim-slam, .anim-rise, .anim-fade-late, .anim-spin { animation-duration: 1ms; animation-iteration-count: 1; }
 }
