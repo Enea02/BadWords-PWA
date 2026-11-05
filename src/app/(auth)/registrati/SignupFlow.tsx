@@ -6,6 +6,7 @@ import { Avatar } from "@design/Avatar";
 import { Stamp, type StampIcon } from "@design/Stamp";
 import { GIRL_COLORS, GIRL_COLOR_LABEL, girlAvatar, girlInk, type GirlColor } from "@design/girls";
 import { GirlAvatar } from "@/components/GirlAvatar";
+import { PasswordField } from "@/components/PasswordField";
 import { ArrowRight, FormError, PaperScreen, PrimaryButton, StepHeader, TextButton, TextField } from "@/components/ui";
 import { checkAccount, previewInvite, signUp, type FormState, type InvitePreview } from "../actions";
 import { CodeInput } from "./CodeInput";
@@ -219,9 +220,8 @@ export function SignupFlow() {
               }}
               aria-invalid={step1?.field === "username" || undefined}
             />
-            <TextField
+            <PasswordField
               id="sj-new-password"
-              type="password"
               label="Password"
               hint="Almeno 8 caratteri."
               autoComplete="new-password"

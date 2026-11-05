@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { FormError, PrimaryButton, TextField } from "@/components/ui";
+import { PasswordField } from "@/components/PasswordField";
 import { login } from "../actions";
 
 export function LoginForm() {
@@ -25,10 +26,9 @@ export function LoginForm() {
         onChange={(e) => setUsername(e.target.value)}
         required
       />
-      <TextField
+      <PasswordField
         id="sj-password"
         name="password"
-        type="password"
         label="Password"
         autoComplete="current-password"
         value={password}
