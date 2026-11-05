@@ -1,14 +1,16 @@
-import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
+import { hasBearer } from "@/lib/bearer.server";
 import { serverEnv } from "@/lib/env.server";
+import { flushPushOutbox } from "@/lib/push.server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Chiusura dei mesi passati (Vercel Cron, ogni giorno alle 00:05 UTC: vedi vercel.json).
  * Vercel invia `Authorization: Bearer ${CRON_SECRET}`. Idempotente: richiamarla non fa danni.
+ * Dopo la chiusura svuota anche la coda delle notifiche push (rete di sicurezza del webhook).
  */
 export async function GET(request: NextRequest) {
-  if (!authorized(request.headers.get("authorization"))) {
+  if (!hasBearer(request.headers.get("authorization"), serverEnv.cronSecret)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -19,11 +21,9 @@ export async function GET(request: NextRequest) {
   }
 
   const closed = (data ?? []).map((r) => ({ group: r.closed_group, month: r.closed_month }));
-  return NextResponse.json({ closed }, { headers: { "Cache-Control": "no-store" } });
-}
-
-function authorized(header: string | null) {
-  const expected = Buffer.from(`Bearer ${serverEnv.cronSecret}`);
-  const got = Buffer.from(header ?? "");
-  return got.length === expected.length && timingSafeEqual(got, expected);
+  const push = await flushPushOutbox().catch((err) => {
+    console.error("flushPushOutbox", err);
+    return { error: "push_failed" };
+  });
+  return NextResponse.json({ closed, push }, { headers: { "Cache-Control": "no-store" } });
 }

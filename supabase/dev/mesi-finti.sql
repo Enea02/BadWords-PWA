@@ -34,4 +34,9 @@ begin
            ((m0 - make_interval(months => r.ago)) + interval '10 days 12 hours')::timestamp at time zone 'Europe/Rome'
     from generate_series(1, r.n);
   end loop;
+
+  -- Niente notifiche "ha sbloccato una penitenza" per mesi finti: arriva solo quella di fine mese.
+  update public.push_outbox set sent_at = now()
+  where sent_at is null
+    and assignment_id in (select a.id from public.penance_assignments a where a.group_id = g and a.month < m0);
 end $$;

@@ -63,18 +63,18 @@ select lives_ok(
 
 select results_eq(
   format($$ select profile_id from public.penance_assignments
-            where kind = 'monthly' and month = %L order by profile_id $$, (select m1 from _m)),
+            where group_id = '22222222-0000-4000-8000-00000000000a' and kind = 'monthly' and month = %L order by profile_id $$, (select m1 from _m)),
   $$ values ('22222222-0000-4000-8000-0000000000a1'::uuid), ('22222222-0000-4000-8000-0000000000a2'::uuid) $$,
   'a pari merito la penitenza grossa va a tutte le prime (i timbri annullati non contano)');
 
 select is(
   (select count(distinct penance_id)::int from public.penance_assignments
-   where kind = 'monthly' and month = (select m1 from _m)),
+   where group_id = '22222222-0000-4000-8000-00000000000a' and kind = 'monthly' and month = (select m1 from _m)),
   1, 'le prime a pari merito prendono la stessa penitenza');
 
 select ok(
   (select bool_and(threshold is null and status = 'pending') from public.penance_assignments
-   where kind = 'monthly' and month = (select m1 from _m)),
+   where group_id = '22222222-0000-4000-8000-00000000000a' and kind = 'monthly' and month = (select m1 from _m)),
   'monthly senza soglia, da fare');
 
 select results_eq(
@@ -96,7 +96,7 @@ select is(
 select public.close_month('22222222-0000-4000-8000-00000000000a', (select m2 from _m));
 
 select is(
-  (select count(*)::int from public.penance_assignments where month = (select m2 from _m)),
+  (select count(*)::int from public.penance_assignments where group_id = '22222222-0000-4000-8000-00000000000a' and month = (select m2 from _m)),
   0, 'mese senza timbri: nessuna penitenza');
 
 select is(

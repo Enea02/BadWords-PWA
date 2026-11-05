@@ -252,6 +252,89 @@ export type Database = {
           },
         ]
       }
+      push_outbox: {
+        Row: {
+          assignment_id: string | null
+          created_at: string
+          event: string
+          group_id: string
+          id: number
+          month: string | null
+          sent_at: string | null
+        }
+        Insert: {
+          assignment_id?: string | null
+          created_at?: string
+          event: string
+          group_id: string
+          id?: never
+          month?: string | null
+          sent_at?: string | null
+        }
+        Update: {
+          assignment_id?: string | null
+          created_at?: string
+          event?: string
+          group_id?: string
+          id?: never
+          month?: string | null
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_outbox_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "penance_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "push_outbox_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          group_id: string
+          id: string
+          p256dh: string
+          profile_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          group_id: string
+          id?: string
+          p256dh: string
+          profile_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          group_id?: string
+          id?: string
+          p256dh?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_profile_id_group_id_fkey"
+            columns: ["profile_id", "group_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "group_id"]
+          },
+        ]
+      }
       stamps: {
         Row: {
           created_at: string
@@ -399,6 +482,24 @@ export type Database = {
     }
     Functions: {
       auth_email_taken: { Args: { p_email: string }; Returns: boolean }
+      claim_push_outbox: {
+        Args: { p_limit?: number }
+        Returns: {
+          assignment_id: string | null
+          created_at: string
+          event: string
+          group_id: string
+          id: number
+          month: string | null
+          sent_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "push_outbox"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       close_month: {
         Args: { p_group: string; p_month: string }
         Returns: {

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { GirlColor } from "@design/girls";
+import { PushToggle } from "@/components/Notifications";
 import { getCurrentProfile } from "@/lib/auth";
 import { isRecent } from "@/lib/month";
 import { createClient } from "@/lib/supabase/server";
@@ -82,6 +83,7 @@ async function GroupData() {
         </>
       )}
 
+      <PushToggle />
       <Account logout={logout} />
     </>
   );

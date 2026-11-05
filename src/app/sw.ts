@@ -50,3 +50,43 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// ─────────────── Notifiche push (payload da src/lib/push.server.ts) ───────────────
+type PushPayload = { title?: string; body?: string; url?: string; tag?: string };
+
+self.addEventListener("push", (event) => {
+  let data: PushPayload = {};
+  try {
+    data = event.data?.json() ?? {};
+  } catch {
+    data = { body: event.data?.text() };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title ?? "Bad Words", {
+      body: data.body,
+      icon: "/icons/icon-192.png",
+      tag: data.tag,
+      lang: "it",
+      data: { url: data.url ?? "/" },
+    }),
+  );
+});
+
+// Al tocco: porta in primo piano l'app già aperta sulla pagina giusta, altrimenti la apre.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const path = (event.notification.data as { url?: string } | null)?.url ?? "/";
+  const url = new URL(path.startsWith("/") ? path : "/", self.location.origin).href;
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      const client = windows.find((c) => new URL(c.url).origin === self.location.origin);
+      if (client) {
+        await client.focus();
+        if (client.url !== url) await client.navigate(url).catch(() => undefined);
+        return;
+      }
+      await self.clients.openWindow(url);
+    })(),
+  );
+});

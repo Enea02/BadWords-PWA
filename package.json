@@ -15,6 +15,7 @@
     "db:test": "supabase test db",
     "dev:mesi-finti": "docker exec -i supabase_db_swear-jar psql -U postgres -d postgres -q -v ON_ERROR_STOP=1 < supabase/dev/mesi-finti.sql",
     "dev:chiudi-mesi": "sh -c 'set -a; . ./.env.local; curl -s -H \"Authorization: Bearer $CRON_SECRET\" ${URL:-http://localhost:3000}/api/cron/close-month; echo'",
+    "dev:push-webhook": "sh -c 'set -a; . ./.env.local; docker exec -i supabase_db_swear-jar psql -U postgres -d postgres -q -At -v ON_ERROR_STOP=1 -v url=${URL:-http://host.docker.internal:3000}/api/push/flush -v secret=$PUSH_WEBHOOK_SECRET < supabase/dev/push-webhook.sql >/dev/null && echo Webhook push: ${URL:-http://host.docker.internal:3000}/api/push/flush'",
     "icons": "node scripts/icons.ts"
   },
   "dependencies": {
@@ -25,7 +26,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
-    "serwist": "^9.5.13"
+    "serwist": "^9.5.13",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
@@ -34,6 +36,7 @@
     "@types/pngjs": "^6.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",

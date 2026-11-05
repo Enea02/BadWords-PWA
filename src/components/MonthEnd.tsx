@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { girlAvatar, type GirlColor } from "@design/girls";
 import { DecidePenance } from "@/components/DecidePenance";
@@ -37,6 +37,8 @@ export function MonthEnd({
   const year = monthYear(closure.month);
   const empty = s.max === 0;
   const p = closure.penance;
+  // Il portale su document.body esiste solo nel browser: sul server non si disegna niente.
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -75,6 +77,8 @@ export function MonthEnd({
   const order = s.podium.length === 3 ? [1, 0, 2] : s.podium.length === 2 ? [1, 0] : [0];
   // Altezza del gradino dal piazzamento: a pari merito stessa altezza.
   const stepHeight = (rank: number) => [80, 58, 44][Math.min(rank, 3) - 1];
+
+  if (!mounted) return null;
 
   return createPortal(
     <div
@@ -206,3 +210,5 @@ function WinnerRing({ id, label }: { id: string; label: string }) {
     </svg>
   );
 }
+
+const noopSubscribe = () => () => {};

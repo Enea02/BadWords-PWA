@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { Stamp, type StampIcon } from "@design/Stamp";
 import { GirlAvatar } from "@/components/GirlAvatar";
 import { InstallBanner } from "@/components/InstallBanner";
+import { PushCard } from "@/components/Notifications";
 import { useIsDesktop } from "@/hooks/useMediaQuery";
 import { useOnline } from "@/hooks/useOnline";
 import { cellKey, statusLine, totalsOf, uuid, type Counts, type Girl, type Word } from "@/lib/board";
@@ -252,6 +253,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
 
       {!online && <OfflineBanner />}
       <InstallBanner />
+      <PushCard />
 
       {/* ─────────────── Tabellone ─────────────── */}
       <div className="flex min-h-0 flex-1 flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-start">
