@@ -1,4 +1,4 @@
-# Swear Jar
+# Bad Words
 
 La carta fedeltà al contrario per un gruppo di amiche: ogni parolaccia è un timbro, ogni 10 timbri nel mese una penitenza, a fine mese chi ne ha di più prende la penitenza grossa.
 

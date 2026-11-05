@@ -57,8 +57,8 @@ export function MonthEnd({
 
   const share = async () => {
     const text = empty
-      ? `Swear Jar · ${title} ${year}: nessun timbro. Mese immacolato!`
-      : `Swear Jar · ${title} ${year}: bocca sporca del mese ${s.winners.length > 1 ? "sono" : "è"} ${s.winnerNames} (${s.subtitle}).${p?.text ? ` Penitenza: ${p.text}` : ""}`;
+      ? `Bad Words · ${title} ${year}: nessun timbro. Mese immacolato!`
+      : `Bad Words · ${title} ${year}: bocca sporca del mese ${s.winners.length > 1 ? "sono" : "è"} ${s.winnerNames} (${s.subtitle}).${p?.text ? ` Penitenza: ${p.text}` : ""}`;
     try {
       if (navigator.share) {
         await navigator.share({ text });

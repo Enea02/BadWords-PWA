@@ -21,7 +21,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
         <div className="flex items-center gap-2.5">
           <BrandLogo size={44} />
           <div className="flex flex-col">
-            <span className="font-display text-xl leading-[1.1] text-red">Swear Jar</span>
+            <span className="font-display text-xl leading-[1.1] text-red">Bad Words</span>
             <Suspense fallback={<span className="h-4 w-20 rounded bg-card2" />}>
               <GroupName />
             </Suspense>

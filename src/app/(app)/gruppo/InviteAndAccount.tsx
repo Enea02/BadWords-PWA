@@ -15,7 +15,7 @@ export function InviteCode({ initial, groupName }: { initial: string; groupName:
   const [msg, setMsg] = useFlash();
 
   const message = () =>
-    `Entra in ${groupName} su Swear Jar: apri ${location.origin}/registrati e scrivi il codice ${code}`;
+    `Entra in ${groupName} su Bad Words: apri ${location.origin}/registrati e scrivi il codice ${code}`;
 
   return (
     <Section id="sj-inv" title="Codice invito" hint="Chi ce l'ha entra nel gruppo e nel tabellone.">

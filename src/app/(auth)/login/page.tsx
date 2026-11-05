@@ -3,7 +3,7 @@ import Image from "next/image";
 import { PaperScreen, TextLink } from "@/components/ui";
 import { LoginForm } from "./LoginForm";
 
-export const metadata: Metadata = { title: "Entra · Swear Jar" };
+export const metadata: Metadata = { title: "Entra · Bad Words" };
 
 /** Board "1 · Login", con nome utente e password al posto del magic link. */
 export default function LoginPage() {
@@ -19,7 +19,7 @@ export default function LoginPage() {
       />
 
       <div className="flex flex-col items-center gap-2.5 text-center">
-        <h1 className="font-display text-[44px] leading-none">Swear Jar</h1>
+        <h1 className="font-display text-[44px] leading-none">Bad Words</h1>
         <p className="max-w-[300px] text-base leading-[1.45] text-pretty text-muted">
           La carta fedeltà al contrario. Ogni parolaccia è un timbro, ogni dieci timbri una penitenza.
         </p>

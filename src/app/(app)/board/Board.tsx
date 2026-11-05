@@ -229,7 +229,7 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
           <div className="flex items-center justify-between gap-3 lg:hidden">
             <div className="flex min-w-0 items-center gap-2">
               <BrandLogo size={32} />
-              <span className="shrink-0 font-display text-base whitespace-nowrap text-red">Swear Jar</span>
+              <span className="shrink-0 font-display text-base whitespace-nowrap text-red">Bad Words</span>
               <span className="truncate text-xs text-muted">· {group.name}</span>
             </div>
             <DaysChip label={info.daysLabel} />

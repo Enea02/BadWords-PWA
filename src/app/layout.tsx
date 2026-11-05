@@ -23,10 +23,10 @@ const courierPrime = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "Swear Jar",
+  title: "Bad Words",
   description: "La carta fedeltà al contrario: ogni parolaccia è un timbro.",
-  applicationName: "Swear Jar",
-  appleWebApp: { capable: true, title: "Swear Jar", statusBarStyle: "default" },
+  applicationName: "Bad Words",
+  appleWebApp: { capable: true, title: "Bad Words", statusBarStyle: "default" },
   formatDetection: { telephone: false },
 };
 

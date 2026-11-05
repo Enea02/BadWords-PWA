@@ -5,8 +5,8 @@ import { LITERAL } from "@design/tokens";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "Swear Jar",
-    short_name: "Swear Jar",
+    name: "Bad Words",
+    short_name: "Bad Words",
     description: "La carta fedeltà al contrario: ogni parolaccia è un timbro.",
     lang: "it",
     start_url: "/",

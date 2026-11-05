@@ -3,7 +3,7 @@ import { Stamp } from "@design/Stamp";
 import { PaperScreen } from "@/components/ui";
 import { ReloadButton } from "./ReloadButton";
 
-export const metadata: Metadata = { title: "Offline · Swear Jar" };
+export const metadata: Metadata = { title: "Offline · Bad Words" };
 
 /** Fallback del service worker per le pagine mai aperte prima (precaricata). */
 export default function OfflinePage() {
