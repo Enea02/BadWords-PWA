@@ -37,19 +37,25 @@
   --sj-grain: 0.55; /* opacità della grana della carta */
   --sj-stamp-blend: multiply; /* come si fonde l'inchiostro sulla carta */
 
-  /* L'inchiostro di ognuna (profiles.color) */
-  --sj-girl-magenta: #c2185b;
+  /* L'inchiostro di ognuna (profiles.color): 8 colori come in Onboarding2 */
+  --sj-girl-fucsia: #c2185b;
   --sj-girl-blu: #2f5da8;
   --sj-girl-verde: #2e7d5b;
   --sj-girl-viola: #6a4bb0;
   --sj-girl-arancio: #b9521a;
+  --sj-girl-petrolio: #1f7a80;
+  --sj-girl-ocra: #8f6410;
+  --sj-girl-ardesia: #46505e;
 
   /* Fondo degli avatar: nel design resta il colore pieno anche in dark */
-  --sj-avatar-magenta: #c2185b;
+  --sj-avatar-fucsia: #c2185b;
   --sj-avatar-blu: #2f5da8;
   --sj-avatar-verde: #2e7d5b;
   --sj-avatar-viola: #6a4bb0;
   --sj-avatar-arancio: #b9521a;
+  --sj-avatar-petrolio: #1f7a80;
+  --sj-avatar-ocra: #8f6410;
+  --sj-avatar-ardesia: #46505e;
 
   /* Raggi */
   --sj-radius-cell: 10px; /* celle, banner offline, bottoni del toast */
@@ -81,10 +87,14 @@
     --sj-grain: 0.22;
     --sj-stamp-blend: screen;
 
-    --sj-girl-magenta: #f06a9b;
+    --sj-girl-fucsia: #f06a9b;
     --sj-girl-blu: #7fa6ea;
     --sj-girl-verde: #62c394;
     --sj-girl-viola: #ae93f0;
     --sj-girl-arancio: #f2904f;
+    /* Varianti scure non presenti nel design: ricavate (schiarite) dai toni chiari. */
+    --sj-girl-petrolio: #5cc4c9;
+    --sj-girl-ocra: #d9a64e;
+    --sj-girl-ardesia: #a7b3c4;
   }
 }

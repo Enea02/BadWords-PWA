@@ -32,7 +32,13 @@ pnpm db:types   # rigenera src/lib/database.types.ts
 
 La logica di gioco vive nel database: trigger sui timbri (mese in ora del gruppo, penitenza ogni 10), vista `monthly_board`, RPC `close_month` / `close_pending_months` (solo `service_role`), RLS su tutte le tabelle.
 
-Utenti demo in locale: `giulia@example.test` (admin), `marta@`, `sofia@`, `chiara@`, `bea@` — gruppo "Le Sboccate", codice `SBOCCA`.
+Utenti demo in locale (nome utente / password): `giulia` (admin), `marta`, `sofia`, `chiara`, `bea` — tutte con `password123`. Gruppo "Le Sboccate", codice invito `SBOCCA`.
+
+## Accesso
+
+Nome utente + password, niente email. Il nome utente diventa un indirizzo interno `<nome>@swearjar.invalid` che non riceve posta. La registrazione pubblica di Supabase è chiusa (`[auth] enable_signup = false`): gli account li crea il server, con la service role, solo dopo aver verificato il codice invito (`/registrati`). Chi non ha un codice può creare un gruppo e ne diventa admin.
+
+Password dimenticata: per ora la reimposta l'admin del progetto da Supabase (Authentication → Users); dal pannello Gruppo in Fase 7.
 
 ## Design
 

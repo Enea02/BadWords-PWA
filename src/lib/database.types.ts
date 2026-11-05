@@ -367,6 +367,7 @@ export type Database = {
       }
     }
     Functions: {
+      auth_email_taken: { Args: { p_email: string }; Returns: boolean }
       close_month: {
         Args: { p_group: string; p_month: string }
         Returns: {
@@ -389,8 +390,56 @@ export type Database = {
           closed_month: string
         }[]
       }
+      create_group: {
+        Args: {
+          p_avatar: string
+          p_color: Database["public"]["Enums"]["girl_color"]
+          p_display_name: string
+          p_group_name: string
+          p_user: string
+        }
+        Returns: {
+          avatar_url: string | null
+          color: Database["public"]["Enums"]["girl_color"]
+          created_at: string
+          display_name: string
+          group_id: string
+          id: string
+          role: Database["public"]["Enums"]["profile_role"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       generate_invite_code: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
+      join_group: {
+        Args: {
+          p_avatar: string
+          p_code: string
+          p_color: Database["public"]["Enums"]["girl_color"]
+          p_display_name: string
+          p_user: string
+        }
+        Returns: {
+          avatar_url: string | null
+          color: Database["public"]["Enums"]["girl_color"]
+          created_at: string
+          display_name: string
+          group_id: string
+          id: string
+          role: Database["public"]["Enums"]["profile_role"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       month_start: { Args: { p_ts: string; p_tz: string }; Returns: string }
       month_totals: {
         Args: { p_group: string; p_month: string }
@@ -402,10 +451,20 @@ export type Database = {
         }[]
       }
       my_group_id: { Args: never; Returns: string }
+      preview_invite: { Args: { p_code: string }; Returns: Json }
+      seed_group_defaults: { Args: { p_group: string }; Returns: undefined }
     }
     Enums: {
       assignment_status: "pending" | "done"
-      girl_color: "magenta" | "blu" | "verde" | "viola" | "arancio"
+      girl_color:
+        | "fucsia"
+        | "blu"
+        | "verde"
+        | "viola"
+        | "arancio"
+        | "petrolio"
+        | "ocra"
+        | "ardesia"
       penance_kind: "small" | "monthly"
       profile_role: "admin" | "member"
       word_icon:
@@ -546,7 +605,16 @@ export const Constants = {
   public: {
     Enums: {
       assignment_status: ["pending", "done"],
-      girl_color: ["magenta", "blu", "verde", "viola", "arancio"],
+      girl_color: [
+        "fucsia",
+        "blu",
+        "verde",
+        "viola",
+        "arancio",
+        "petrolio",
+        "ocra",
+        "ardesia",
+      ],
       penance_kind: ["small", "monthly"],
       profile_role: ["admin", "member"],
       word_icon: [

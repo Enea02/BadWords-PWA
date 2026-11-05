@@ -25,11 +25,14 @@
   --color-toast-stamp: var(--sj-toast-stamp);
   --color-on-avatar: var(--sj-on-avatar);
 
-  --color-girl-magenta: var(--sj-girl-magenta);
+  --color-girl-fucsia: var(--sj-girl-fucsia);
   --color-girl-blu: var(--sj-girl-blu);
   --color-girl-verde: var(--sj-girl-verde);
   --color-girl-viola: var(--sj-girl-viola);
   --color-girl-arancio: var(--sj-girl-arancio);
+  --color-girl-petrolio: var(--sj-girl-petrolio);
+  --color-girl-ocra: var(--sj-girl-ocra);
+  --color-girl-ardesia: var(--sj-girl-ardesia);
 
   --font-display: var(--font-alfa-slab), Rockwell, Georgia, serif;
   --font-sans: var(--font-dm-sans), system-ui, sans-serif;
