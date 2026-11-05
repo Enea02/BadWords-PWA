@@ -2,6 +2,7 @@
 -- Uso: pnpm dev:mesi-finti && pnpm dev:chiudi-mesi
 -- Mese -1: Giulia 14, Bea 11, Marta 9, Sofia 6, Chiara 3 (come nella board FineMese).
 -- Mese -2: Giulia e Bea a pari merito con 12.  Mese -3: nessun timbro (mese immacolato).
+-- Ripetibile: ogni volta riparte da zero sui mesi passati (il mese corrente non lo tocca).
 do $$
 declare
   g constant uuid := '00000000-0000-4000-8000-00000000a001';
@@ -9,6 +10,12 @@ declare
   w uuid;
   r record;
 begin
+  -- Pulizia dei mesi passati del gruppo demo.
+  delete from public.month_closures where group_id = g and month < m0;
+  delete from public.penance_assignments where group_id = g and month < m0;
+  delete from public.stamps where group_id = g and month < m0;
+  update public.profiles set last_seen_closure = null where group_id = g;
+
   update public.groups set created_at = (m0 - interval '3 months' + interval '2 days') where id = g;
   update public.profiles set created_at = (m0 - interval '3 months' + interval '2 days') where group_id = g;
   select id into w from public.words where group_id = g order by sort_order limit 1;
