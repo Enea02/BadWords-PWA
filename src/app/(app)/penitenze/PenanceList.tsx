@@ -6,7 +6,16 @@ import { Stamp } from "@design/Stamp";
 import { GirlAvatar } from "@/components/GirlAvatar";
 import type { Girl } from "@/lib/board";
 import { relativeDay, shortDate } from "@/lib/month";
-import { FALLBACK_TEXT, fetchPenances, penanceMeta, setPenanceStatus, type PenanceItem } from "@/lib/penances";
+import { DecidePenance } from "@/components/DecidePenance";
+import {
+  AWAITING_TEXT,
+  FALLBACK_TEXT,
+  decidePenance,
+  fetchPenances,
+  penanceMeta,
+  setPenanceStatus,
+  type PenanceItem,
+} from "@/lib/penances";
 import { createClient } from "@/lib/supabase/client";
 
 type Tab = "todo" | "done";
@@ -181,13 +190,33 @@ export function PenanceList({
                     {p.kind === "monthly" ? "Grossa" : "Piccola"}
                   </span>
                 </div>
-                <p className={`font-display text-xl leading-[1.2] text-pretty ${isDone ? "text-muted" : "text-ink"}`}>
-                  {p.text ?? FALLBACK_TEXT}
+                <p className={`font-display text-xl leading-[1.2] text-pretty ${isDone || p.awaiting ? "text-muted" : "text-ink"}`}>
+                  {p.awaiting ? AWAITING_TEXT : (p.text ?? FALLBACK_TEXT)}
                 </p>
                 <span className="text-xs text-muted">{freshDone === p.id ? "Fatta adesso" : penanceMeta(p, when)}</span>
               </div>
 
-              {!isDone && canMark && (
+              {!isDone && p.awaiting && (
+                <>
+                  <div className="mx-3 border-t-2 border-dashed border-line" />
+                  <div className="px-4 pt-3 pb-4">
+                    {me.role === "admin" ? (
+                      <DecidePenance
+                        label={mine ? "Decidi la tua penitenza" : `Decidi la penitenza di ${who?.name ?? "lei"}`}
+                        onDecide={async (text) => {
+                          const ok = await decidePenance(supabase, p.id, text);
+                          if (ok) setItems((xs) => xs.map((x) => (x.id === p.id ? { ...x, text, awaiting: false } : x)));
+                          return ok;
+                        }}
+                      />
+                    ) : (
+                      <p className="text-sm text-muted">In attesa che l&apos;admin la decida.</p>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {!isDone && !p.awaiting && canMark && (
                 <>
                   <div className="mx-3 border-t-2 border-dashed border-line" />
                   <div aria-hidden="true" className="absolute bottom-[57px] -left-[9px] size-[18px] rounded-full bg-paper" />

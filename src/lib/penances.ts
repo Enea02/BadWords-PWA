@@ -12,14 +12,18 @@ export type PenanceItem = {
   createdAt: string;
   doneAt: string | null;
   acknowledgedAt: string | null;
-  /** null se il mazzo era vuoto al momento dell'estrazione. */
+  /** Testo da mostrare: deciso dall'admin (modalità "sul momento") o dal mazzo. null = mazzo vuoto o da decidere. */
   text: string | null;
+  /** Creata in modalità "sul momento". */
+  custom: boolean;
+  /** true finché l'admin non l'ha scritta. */
+  awaiting: boolean;
 };
 
 export const FALLBACK_TEXT = "Penitenza a scelta del gruppo";
 
 const SELECT =
-  "id, profile_id, kind, month, threshold, status, created_at, done_at, acknowledged_at, penance:penances (text)";
+  "id, profile_id, kind, month, threshold, status, created_at, done_at, acknowledged_at, custom, custom_text, penance:penances (text)";
 
 type Row = {
   id: string;
@@ -31,6 +35,8 @@ type Row = {
   created_at: string;
   done_at: string | null;
   acknowledged_at: string | null;
+  custom: boolean;
+  custom_text: string | null;
   penance: { text: string } | null;
 };
 
@@ -44,7 +50,9 @@ export const toItem = (r: Row): PenanceItem => ({
   createdAt: r.created_at,
   doneAt: r.done_at,
   acknowledgedAt: r.acknowledged_at,
-  text: r.penance?.text ?? null,
+  text: r.custom_text ?? r.penance?.text ?? null,
+  custom: r.custom,
+  awaiting: r.custom && !r.custom_text,
 });
 
 /** Tutte le da fare + le ultime 50 fatte del gruppo (la RLS limita al proprio gruppo). */
@@ -74,6 +82,18 @@ export async function setPenanceStatus(supabase: SupabaseClient<Database>, id: s
     .select("id");
   return !error && (data?.length ?? 0) > 0;
 }
+
+/** Solo admin (lo verifica il database). */
+export async function decidePenance(supabase: SupabaseClient<Database>, id: string, text: string) {
+  const { data, error } = await supabase
+    .from("penance_assignments")
+    .update({ custom_text: text.trim() })
+    .eq("id", id)
+    .select("id");
+  return !error && (data?.length ?? 0) > 0;
+}
+
+export const AWAITING_TEXT = "Da decidere";
 
 export async function acknowledgePenance(supabase: SupabaseClient<Database>, id: string) {
   await supabase.from("penance_assignments").update({ acknowledged_at: new Date().toISOString() }).eq("id", id);

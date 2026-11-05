@@ -40,6 +40,7 @@ export type Database = {
           id: string
           invite_code: string
           name: string
+          penance_mode: Database["public"]["Enums"]["penance_mode"]
           timezone: string
         }
         Insert: {
@@ -47,6 +48,7 @@ export type Database = {
           id?: string
           invite_code?: string
           name: string
+          penance_mode?: Database["public"]["Enums"]["penance_mode"]
           timezone?: string
         }
         Update: {
@@ -54,6 +56,7 @@ export type Database = {
           id?: string
           invite_code?: string
           name?: string
+          penance_mode?: Database["public"]["Enums"]["penance_mode"]
           timezone?: string
         }
         Relationships: []
@@ -91,6 +94,10 @@ export type Database = {
         Row: {
           acknowledged_at: string | null
           created_at: string
+          custom: boolean
+          custom_text: string | null
+          decided_at: string | null
+          decided_by: string | null
           done_at: string | null
           group_id: string
           id: string
@@ -104,6 +111,10 @@ export type Database = {
         Insert: {
           acknowledged_at?: string | null
           created_at?: string
+          custom?: boolean
+          custom_text?: string | null
+          decided_at?: string | null
+          decided_by?: string | null
           done_at?: string | null
           group_id: string
           id?: string
@@ -117,6 +128,10 @@ export type Database = {
         Update: {
           acknowledged_at?: string | null
           created_at?: string
+          custom?: boolean
+          custom_text?: string | null
+          decided_at?: string | null
+          decided_by?: string | null
           done_at?: string | null
           group_id?: string
           id?: string
@@ -128,6 +143,13 @@ export type Database = {
           threshold?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "penance_assignments_decided_by_group_id_fkey"
+            columns: ["decided_by", "group_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "group_id"]
+          },
           {
             foreignKeyName: "penance_assignments_group_id_fkey"
             columns: ["group_id"]
@@ -469,6 +491,7 @@ export type Database = {
         | "ocra"
         | "ardesia"
       penance_kind: "small" | "monthly"
+      penance_mode: "deck" | "custom"
       profile_role: "admin" | "member"
       word_icon:
         | "peperoncino"
@@ -619,6 +642,7 @@ export const Constants = {
         "ardesia",
       ],
       penance_kind: ["small", "monthly"],
+      penance_mode: ["deck", "custom"],
       profile_role: ["admin", "member"],
       word_icon: [
         "peperoncino",

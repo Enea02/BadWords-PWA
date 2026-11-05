@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { acknowledgePenance, fetchPenance, type PenanceItem } from "@/lib/penances";
+import { acknowledgePenance, decidePenance, fetchPenance, type PenanceItem } from "@/lib/penances";
 import { stampedRecently } from "@/lib/stampBus";
 import { createClient } from "@/lib/supabase/client";
 import { PenanceReveal } from "./PenanceReveal";
@@ -18,11 +18,13 @@ type Member = { id: string; name: string };
  */
 export function PenanceWatcher({
   meId,
+  isAdmin,
   groupId,
   timezone,
   members,
 }: {
   meId: string;
+  isAdmin: boolean;
   groupId: string;
   timezone: string;
   members: Member[];
@@ -31,6 +33,10 @@ export function PenanceWatcher({
   const supabase = useMemo(() => createClient(), []);
   const [queue, setQueue] = useState<PenanceItem[]>([]);
   const [news, setNews] = useState<string | null>(null);
+  const queueRef = useRef<PenanceItem[]>([]);
+  useEffect(() => {
+    queueRef.current = queue;
+  }, [queue]);
   const nameOf = useCallback((id: string) => members.find((m) => m.id === id)?.name ?? "Qualcuna", [members]);
 
   const enqueue = useCallback(
@@ -62,21 +68,36 @@ export function PenanceWatcher({
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "penance_assignments", filter: `group_id=eq.${groupId}` },
         async ({ new: row }) => {
-          const r = row as { id: string; profile_id: string; kind: string };
+          const r = row as { id: string; profile_id: string; kind: string; custom: boolean };
           if (r.kind !== "small") return; // la grossa del mese la mostra la schermata Fine mese
           if (r.profile_id === meId || stampedRecently(r.profile_id)) {
             const p = await fetchPenance(supabase, r.id);
             if (p) enqueue(p);
           } else {
-            setNews(`${nameOf(r.profile_id)} ha sbloccato una penitenza`);
+            setNews(
+              r.custom && isAdmin
+                ? `${nameOf(r.profile_id)} ha sbloccato una penitenza: decidila tu`
+                : `${nameOf(r.profile_id)} ha sbloccato una penitenza`,
+            );
           }
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "penance_assignments", filter: `group_id=eq.${groupId}` },
+        async ({ new: row }) => {
+          // L'admin ha deciso il testo mentre la schermata è aperta: aggiorna il biglietto.
+          const id = (row as { id: string }).id;
+          if (!queueRef.current.some((x) => x.id === id)) return;
+          const p = await fetchPenance(supabase, id);
+          if (p) setQueue((q) => q.map((x) => (x.id === id ? p : x)));
         },
       )
       .subscribe();
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, groupId, meId, enqueue, nameOf]);
+  }, [supabase, groupId, meId, isAdmin, enqueue, nameOf]);
 
   useEffect(() => {
     if (!news) return;
@@ -94,7 +115,16 @@ export function PenanceWatcher({
           penance={current}
           name={nameOf(current.profileId)}
           mine={current.profileId === meId}
+          isAdmin={isAdmin}
           timezone={timezone}
+          onDecide={async (text) => {
+            const ok = await decidePenance(supabase, current.id, text);
+            if (ok) {
+              const p = await fetchPenance(supabase, current.id);
+              if (p) setQueue((q) => q.map((x) => (x.id === p.id ? p : x)));
+            }
+            return ok;
+          }}
           onAccept={() => {
             const mine = current.profileId === meId;
             if (mine) acknowledgePenance(supabase, current.id);

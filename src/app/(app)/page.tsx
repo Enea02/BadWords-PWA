@@ -28,7 +28,7 @@ async function BoardData() {
     supabase.from("monthly_board").select("profile_id, word_id, stamps").eq("month", m.month),
     supabase
       .from("penance_assignments")
-      .select("id, profile_id, kind, created_at, penance:penances (text)")
+      .select("id, profile_id, kind, created_at, custom, custom_text, penance:penances (text)")
       .eq("status", "pending")
       .order("created_at", { ascending: false })
       .limit(4),
@@ -51,7 +51,8 @@ async function BoardData() {
     profileId: a.profile_id,
     kind: a.kind,
     createdAt: a.created_at,
-    text: a.penance?.text ?? "Penitenza a scelta del gruppo",
+    text: a.custom_text ?? a.penance?.text ?? (a.custom ? "Da decidere" : "Penitenza a scelta del gruppo"),
+    awaiting: a.custom && !a.custom_text,
   }));
 
   return (

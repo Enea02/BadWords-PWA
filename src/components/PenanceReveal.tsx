@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { FALLBACK_TEXT, monthName, type PenanceItem } from "@/lib/penances";
+import { DecidePenance } from "./DecidePenance";
 import { ticketDate } from "@/lib/month";
 
 /**
@@ -13,14 +14,18 @@ export function PenanceReveal({
   penance,
   name,
   mine,
+  isAdmin,
   timezone,
   onAccept,
+  onDecide,
 }: {
   penance: PenanceItem;
   name: string;
   mine: boolean;
+  isAdmin: boolean;
   timezone: string;
   onAccept: () => void;
+  onDecide: (text: string) => Promise<boolean>;
 }) {
   const id = useId().replace(/:/g, "");
   const button = useRef<HTMLButtonElement>(null);
@@ -76,15 +81,32 @@ export function PenanceReveal({
             <span className="receipt text-xs tracking-[0.06em] text-red">
               Penitenza piccola · N°{n} di {monthName(penance.month)}
             </span>
-            <p id={`${id}-text`} className="font-display text-[27px] leading-[1.15] text-balance">
-              {penance.text ?? FALLBACK_TEXT}
-            </p>
+            {penance.awaiting && isAdmin ? (
+              <DecidePenance
+                onDecide={onDecide}
+                label={mine ? "Decidi la tua penitenza" : `Decidi la penitenza di ${name}`}
+              />
+            ) : penance.awaiting ? (
+              <p id={`${id}-text`} className="font-display text-[24px] leading-[1.15] text-balance text-muted" aria-live="polite">
+                {mine ? "L'admin sta decidendo il tuo destino…" : "L'admin deciderà la penitenza."}
+              </p>
+            ) : (
+              <p id={`${id}-text`} className="font-display text-[27px] leading-[1.15] text-balance" aria-live="polite">
+                {penance.text ?? FALLBACK_TEXT}
+              </p>
+            )}
           </div>
           <div className="mx-3.5 border-t-2 border-dashed border-line" />
           <div aria-hidden="true" className="absolute -left-[11px] size-[22px] rounded-full bg-penance-bg" style={{ top: "calc(100% - 52px)" }} />
           <div aria-hidden="true" className="absolute -right-[11px] size-[22px] rounded-full bg-penance-bg" style={{ top: "calc(100% - 52px)" }} />
           <div className="flex items-center justify-between gap-3 px-[22px] pt-3 pb-3.5 text-xs text-muted">
-            <span>{penance.text ? "Pescata a caso dal mazzo del gruppo" : "Il mazzo era vuoto: decidete voi"}</span>
+            <span>
+              {penance.custom
+                ? "Decisa sul momento dall'admin"
+                : penance.text
+                  ? "Pescata a caso dal mazzo del gruppo"
+                  : "Il mazzo era vuoto: decidete voi"}
+            </span>
             <span className="font-receipt font-bold">{ticketDate(penance.createdAt, timezone)}</span>
           </div>
         </div>

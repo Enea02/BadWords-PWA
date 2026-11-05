@@ -16,7 +16,14 @@ import { noteStamp } from "@/lib/stampBus";
 import { BoardGrid, type Fresh } from "./BoardGrid";
 import { CellSheet, QuickStampSheet } from "./Sheets";
 
-export type PendingPenance = { id: string; profileId: string; kind: "small" | "monthly"; createdAt: string; text: string };
+export type PendingPenance = {
+  id: string;
+  profileId: string;
+  kind: "small" | "monthly";
+  createdAt: string;
+  text: string;
+  awaiting: boolean;
+};
 
 type Props = {
   me: { id: string; role: "admin" | "member" };
@@ -288,8 +295,13 @@ export function Board({ me, group, month, girls, words, initialCounts, todo: ini
                   <span className="text-sm font-extrabold">{who?.name ?? "—"}</span>
                   <span className="ml-auto text-xs text-muted">{shortDate(p.createdAt, group.timezone)}</span>
                 </div>
-                <p className="font-display text-[17px] leading-[1.25]">{p.text}</p>
-                {(p.profileId === me.id || me.role === "admin") && (
+                <p className={`font-display text-[17px] leading-[1.25] ${p.awaiting ? "text-muted" : ""}`}>{p.text}</p>
+                {p.awaiting && me.role === "admin" && (
+                  <Link href="/penitenze" className="self-start text-[13px] font-extrabold text-red underline underline-offset-2">
+                    Decidila tu
+                  </Link>
+                )}
+                {!p.awaiting && (p.profileId === me.id || me.role === "admin") && (
                   <button
                     type="button"
                     onClick={async () => {

@@ -3,6 +3,7 @@ import type { GirlColor } from "@design/girls";
 import { GirlAvatar } from "@/components/GirlAvatar";
 import { getCurrentProfile } from "@/lib/auth";
 import { logout } from "../../(auth)/actions";
+import { PenanceModeToggle } from "./PenanceModeToggle";
 
 /** Segnaposto di "Gruppo": il pannello admin completo arriva in Fase 7. */
 export default function GroupPage() {
@@ -38,6 +39,13 @@ async function Who() {
           <span className="text-[13px] text-muted">Mandalo alle amiche: lo scrivono in &ldquo;Ho un codice invito&rdquo;.</span>
         </div>
       )}
+
+      <section aria-labelledby="sj-settings-penances" className="flex flex-col gap-3">
+        <h2 id="sj-settings-penances" className="receipt text-xs text-muted">
+          Impostazioni · Penitenze
+        </h2>
+        <PenanceModeToggle initial={me.group.penance_mode} isAdmin={me.role === "admin"} />
+      </section>
 
       <p className="text-[15px] text-muted">Legenda, mazzo delle penitenze e membri arrivano nel pannello admin.</p>
 
