@@ -1,0 +1,90 @@
+/*
+ * Swear Jar · design tokens
+ * Source: Claude Design artifact "Swear Jar" (Sistema visivo + Tabellone light/dark).
+ * Single source of truth for colour: nothing outside this file may hardcode a colour.
+ * Dark mode follows the system (prefers-color-scheme).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Carta e inchiostro */
+  --sj-paper: #f3ebdd; /* Carta */
+  --sj-card: #fbf6ec; /* Cartoncino */
+  --sj-card2: #e7dcc8; /* Ombra carta */
+  --sj-line: #cfbea2; /* Righe */
+  --sj-ink: #2a211c; /* Inchiostro */
+  --sj-muted: #6b5b4e; /* Testo tenue */
+  --sj-red: #b8291a; /* Rosso timbro */
+  --sj-on-red: #fff8ee;
+  --sj-red-shadow: #7a1a10;
+  --sj-gold: #c98a12; /* Oro corona */
+  --sj-legend: #3b302a; /* Inchiostro dei timbri in legenda */
+
+  /* Toast (invertito rispetto alla carta) */
+  --sj-toast-bg: #2a211c;
+  --sj-toast-ink: #f3ebdd;
+  --sj-toast-accent: #ff9c86;
+  --sj-toast-stamp: #7fa6ea;
+
+  /* Testo sugli avatar (uguale nei due temi) */
+  --sj-on-avatar: #fff8ee;
+
+  /* Ombre: RGB dell'inchiostro chiaro, usato con alpha */
+  --sj-shadow-rgb: 42 33 28;
+
+  /* Materia */
+  --sj-grain: 0.55; /* opacità della grana della carta */
+  --sj-stamp-blend: multiply; /* come si fonde l'inchiostro sulla carta */
+
+  /* L'inchiostro di ognuna (profiles.color) */
+  --sj-girl-magenta: #c2185b;
+  --sj-girl-blu: #2f5da8;
+  --sj-girl-verde: #2e7d5b;
+  --sj-girl-viola: #6a4bb0;
+  --sj-girl-arancio: #b9521a;
+
+  /* Fondo degli avatar: nel design resta il colore pieno anche in dark */
+  --sj-avatar-magenta: #c2185b;
+  --sj-avatar-blu: #2f5da8;
+  --sj-avatar-verde: #2e7d5b;
+  --sj-avatar-viola: #6a4bb0;
+  --sj-avatar-arancio: #b9521a;
+
+  /* Raggi */
+  --sj-radius-cell: 10px; /* celle, banner offline, bottoni del toast */
+  --sj-radius-card: 14px; /* toast, card, bottoni tratteggiati */
+  --sj-radius-chip: 15px; /* pillole tipo "Mancano N giorni" */
+  --sj-radius-button: 22px; /* bottoni outline 44px */
+  --sj-radius-fab: 28px; /* bottone flottante 56px */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sj-paper: #1c1714;
+    --sj-card: #26201b;
+    --sj-card2: #352d26;
+    --sj-line: #4d4237;
+    --sj-ink: #f1e7d8;
+    --sj-muted: #b9ab99;
+    --sj-red: #ef5b45;
+    --sj-on-red: #1c1714;
+    --sj-red-shadow: #8e2a1c;
+    --sj-gold: #e7b14a;
+    --sj-legend: #e3d6c3;
+
+    --sj-toast-bg: #f1e7d8;
+    --sj-toast-ink: #1c1714;
+    --sj-toast-accent: #b8291a;
+    --sj-toast-stamp: #2f5da8;
+
+    --sj-grain: 0.22;
+    --sj-stamp-blend: screen;
+
+    --sj-girl-magenta: #f06a9b;
+    --sj-girl-blu: #7fa6ea;
+    --sj-girl-verde: #62c394;
+    --sj-girl-viola: #ae93f0;
+    --sj-girl-arancio: #f2904f;
+  }
+}

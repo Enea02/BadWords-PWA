@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@import "../../design/tokens.css";
+
+/* Solo i token del design: la palette di default di Tailwind è disattivata,
+   quindi `bg-red-500` & co. non esistono e non si può sgarrare. */
+@theme {
+  --color-*: initial;
+}
+
+@theme inline {
+  --color-paper: var(--sj-paper);
+  --color-card: var(--sj-card);
+  --color-card2: var(--sj-card2);
+  --color-line: var(--sj-line);
+  --color-ink: var(--sj-ink);
+  --color-muted: var(--sj-muted);
+  --color-red: var(--sj-red);
+  --color-on-red: var(--sj-on-red);
+  --color-red-shadow: var(--sj-red-shadow);
+  --color-gold: var(--sj-gold);
+  --color-legend: var(--sj-legend);
+  --color-toast-bg: var(--sj-toast-bg);
+  --color-toast-ink: var(--sj-toast-ink);
+  --color-toast-accent: var(--sj-toast-accent);
+  --color-toast-stamp: var(--sj-toast-stamp);
+  --color-on-avatar: var(--sj-on-avatar);
+
+  --color-girl-magenta: var(--sj-girl-magenta);
+  --color-girl-blu: var(--sj-girl-blu);
+  --color-girl-verde: var(--sj-girl-verde);
+  --color-girl-viola: var(--sj-girl-viola);
+  --color-girl-arancio: var(--sj-girl-arancio);
+
+  --font-display: var(--font-alfa-slab), Rockwell, Georgia, serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-receipt: var(--font-courier-prime), "Courier New", monospace;
+
+  --radius-cell: var(--sj-radius-cell);
+  --radius-card: var(--sj-radius-card);
+  --radius-chip: var(--sj-radius-chip);
+  --radius-button: var(--sj-radius-button);
+  --radius-fab: var(--sj-radius-fab);
+
+  --shadow-fab: 0 4px 0 var(--sj-red-shadow), 0 12px 24px rgb(var(--sj-shadow-rgb) / 0.28);
+  --shadow-toast: 0 12px 28px rgb(var(--sj-shadow-rgb) / 0.3);
+  --shadow-sticky: 6px 0 10px -8px rgb(var(--sj-shadow-rgb) / 0.35);
+}
+
+@layer base {
+  html {
+    background: var(--sj-paper);
+    color: var(--sj-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Etichetta "da ricevuta": Courier Prime maiuscolo spaziato. */
+@utility receipt {
+  font-family: var(--font-receipt);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
