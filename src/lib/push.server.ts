@@ -162,7 +162,9 @@ async function deliver(admin: Admin, outgoing: Outgoing[]) {
           } catch (err) {
             // 404/410: iscrizione scaduta o revocata dall'utente → si cancella.
             if (err instanceof WebPushError && (err.statusCode === 404 || err.statusCode === 410)) gone.push(s.id);
-            else console.error("push", err instanceof WebPushError ? err.statusCode : err);
+            else if (err instanceof WebPushError)
+              console.error("push", err.statusCode, new URL(s.endpoint).hostname, err.body?.slice(0, 200));
+            else console.error("push", err);
           }
         }),
     ),

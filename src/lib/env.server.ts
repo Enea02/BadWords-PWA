@@ -17,6 +17,9 @@ export const serverEnv = {
     const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
     const privateKey = process.env.VAPID_PRIVATE_KEY;
     if (!publicKey || !privateKey) return null;
-    return { publicKey, privateKey, subject: process.env.VAPID_SUBJECT || "https://bad-words.invalid" };
+    // Apple accetta solo un contatto reale (mailto: o https): di default l'indirizzo di produzione su Vercel.
+    const site = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    const subject = process.env.VAPID_SUBJECT || (site ? `https://${site}` : "https://localhost");
+    return { publicKey, privateKey, subject };
   },
 };
